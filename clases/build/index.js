@@ -23,7 +23,7 @@ class User {
         this.books.push(book);
     }
     getBookNames() {
-        return this.books;
+        return this.books.map(({ name }) => name);
     }
 }
 const user = new User("Ismael", "Morel", "gato");

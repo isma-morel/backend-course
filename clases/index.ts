@@ -31,8 +31,8 @@ class User {
     };
     this.books.push(book);
   }
-  getBookNames(): Book[] {
-    return this.books;
+  getBookNames(): string[] {
+    return this.books.map(({ name }) => name);
   }
 }
 
