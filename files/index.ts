@@ -1,5 +1,5 @@
 import { readFileSync } from "fs";
-import { writeFile } from "fs/promises";
+import { writeFile, readFile } from "fs/promises";
 import { Obj, ObjWithId } from "./model/model";
 
 class Contenedor {
@@ -15,7 +15,7 @@ class Contenedor {
     let id: number = 0;
     try {
       //   console.log(this._filesList.length);
-      const file = readFileSync(`./files/${this._name}.txt`);
+      const file = await readFile(`./files/${this._name}.txt`);
       const fileParsed = JSON.parse(file.toString());
       this._filesList = fileParsed;
       if (this._filesList.length) {
@@ -43,35 +43,46 @@ class Contenedor {
     }
     return id;
   }
-  getById(id: number): string | ObjWithId {
-    const file = readFileSync(`./files/${this._name}.txt`);
-    const fileParsed = JSON.parse(file.toString());
-    this._filesList = fileParsed;
-    const fileFound = this._filesList.find(({ id: objId }) => id === objId);
-    //   console.log(fileFound);
-    if (!fileFound) {
-      return "El archivo no existe";
-    } else {
-      return fileFound;
+  async getById(id: number) {
+    try {
+      const file = await readFile(`./files/${this._name}.txt`);
+      const fileParsed = JSON.parse(file.toString());
+      this._filesList = fileParsed;
+      const fileSearch = async (id: number) =>
+        this._filesList.find(({ id: objId }) => objId === id);
+      const fileFound = await fileSearch(id);
+      if (!fileFound) {
+        return console.log("El archivo no existe");
+      } else {
+        return console.log(fileFound);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
-  getAll(): ObjWithId[] {
-    const file = readFileSync(`./files/${this._name}.txt`);
-    const fileParsed = JSON.parse(file.toString());
-    this._filesList = fileParsed;
-    return fileParsed;
+  async getAll() {
+    try {
+      const file = await readFile(`./files/${this._name}.txt`, "utf-8");
+      const fileParsed = JSON.parse(file.toString());
+      this._filesList = fileParsed;
+      return console.log(fileParsed);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async deleteById(id: number): Promise<void> {
     try {
-      const file = readFileSync(`./files/${this._name}.txt`);
+      const file = await readFile(`./files/${this._name}.txt`, "utf-8");
       const fileParsed = JSON.parse(file.toString());
       this._filesList = fileParsed;
-      if (!this._filesList.some(({ id: objId }) => objId === id))
-        return console.log("No existe el objeto con la id " + id);
-      const fileRemoved = this._filesList.filter(
-        ({ id: objId }) => id !== objId
-      );
+      const objStatus = async (id: number) =>
+        this._filesList.some(({ id: objId }) => objId === id);
+      const status = await objStatus(id);
+      if (!status) return console.log("No existe el objeto con la id " + id);
+      const fileRemover = async (id: number) =>
+        this._filesList.filter(({ id: objId }) => id !== objId);
+      const fileRemoved = await fileRemover(id);
       const txtContent = JSON.stringify(fileRemoved);
       await writeFile(`./files/${this._name}.txt`, txtContent, "utf-8");
       console.log("Borrado exitoso");
@@ -92,7 +103,7 @@ class Contenedor {
 
 const content: Contenedor = new Contenedor("file1");
 content.save({ title: "xd", price: 12312 });
-// content.getById(9);
-// content.deleteById(1);
-// content.getAll();
-// content.deleteAll();
+content.getById(9);
+content.deleteById(1);
+content.getAll();
+content.deleteAll();

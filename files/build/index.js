@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const fs_1 = require("fs");
 const promises_1 = require("fs/promises");
 class Contenedor {
     constructor(name) {
@@ -23,7 +22,7 @@ class Contenedor {
             let id = 0;
             try {
                 //   console.log(this._filesList.length);
-                const file = (0, fs_1.readFileSync)(`./files/${this._name}.txt`);
+                const file = yield (0, promises_1.readFile)(`./files/${this._name}.txt`);
                 const fileParsed = JSON.parse(file.toString());
                 this._filesList = fileParsed;
                 if (this._filesList.length) {
@@ -49,33 +48,50 @@ class Contenedor {
         });
     }
     getById(id) {
-        const file = (0, fs_1.readFileSync)(`./files/${this._name}.txt`);
-        const fileParsed = JSON.parse(file.toString());
-        this._filesList = fileParsed;
-        const fileFound = this._filesList.find(({ id: objId }) => id === objId);
-        //   console.log(fileFound);
-        if (!fileFound) {
-            return "El archivo no existe";
-        }
-        else {
-            return fileFound;
-        }
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const file = yield (0, promises_1.readFile)(`./files/${this._name}.txt`);
+                const fileParsed = JSON.parse(file.toString());
+                this._filesList = fileParsed;
+                const fileSearch = (id) => __awaiter(this, void 0, void 0, function* () { return this._filesList.find(({ id: objId }) => objId === id); });
+                const fileFound = yield fileSearch(id);
+                if (!fileFound) {
+                    return console.log("El archivo no existe");
+                }
+                else {
+                    return console.log(fileFound);
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        });
     }
     getAll() {
-        const file = (0, fs_1.readFileSync)(`./files/${this._name}.txt`);
-        const fileParsed = JSON.parse(file.toString());
-        this._filesList = fileParsed;
-        return fileParsed;
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const file = yield (0, promises_1.readFile)(`./files/${this._name}.txt`, "utf-8");
+                const fileParsed = JSON.parse(file.toString());
+                this._filesList = fileParsed;
+                return console.log(fileParsed);
+            }
+            catch (err) {
+                console.log(err);
+            }
+        });
     }
     deleteById(id) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const file = (0, fs_1.readFileSync)(`./files/${this._name}.txt`);
+                const file = yield (0, promises_1.readFile)(`./files/${this._name}.txt`, "utf-8");
                 const fileParsed = JSON.parse(file.toString());
                 this._filesList = fileParsed;
-                if (!this._filesList.some(({ id: objId }) => objId === id))
+                const objStatus = (id) => __awaiter(this, void 0, void 0, function* () { return this._filesList.some(({ id: objId }) => objId === id); });
+                const status = yield objStatus(id);
+                if (!status)
                     return console.log("No existe el objeto con la id " + id);
-                const fileRemoved = this._filesList.filter(({ id: objId }) => id !== objId);
+                const fileRemover = (id) => __awaiter(this, void 0, void 0, function* () { return this._filesList.filter(({ id: objId }) => id !== objId); });
+                const fileRemoved = yield fileRemover(id);
                 const txtContent = JSON.stringify(fileRemoved);
                 yield (0, promises_1.writeFile)(`./files/${this._name}.txt`, txtContent, "utf-8");
                 console.log("Borrado exitoso");
@@ -99,7 +115,7 @@ class Contenedor {
 }
 const content = new Contenedor("file1");
 content.save({ title: "xd", price: 12312 });
-// content.getById(9);
-// content.deleteById(1);
-// content.getAll();
-// content.deleteAll();
+content.getById(9);
+content.deleteById(1);
+content.getAll();
+content.deleteAll();

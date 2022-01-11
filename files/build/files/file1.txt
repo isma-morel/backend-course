@@ -1,1 +1,1 @@
-[{"title":"xd","price":12312,"id":1},{"title":"xd","price":12312,"id":2},{"title":"xd","price":12312,"id":3}]
+[{"title":"xd","price":12312,"id":1}]
