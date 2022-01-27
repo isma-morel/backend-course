@@ -1,0 +1,13 @@
+{
+  "mascotas": [
+    { "nombre": "tony", "raza": "mestizo", "edad": 2 },
+    { "nombre": "tony", "raza": "mestizo", "edad": 2 },
+    { "nombre": "tony", "raza": "mestizo", "edad": 2 },
+    { "nombre": "tony", "raza": "mestizo", "edad": 2 }
+  ],
+  "personas": [
+    { "nombre": "tony", "apellido": "asdas", "edad": 10 },
+    { "nombre": "Rodrigo Ismael ", "apellido": "rrr", "edad": 18 },
+    { "nombre": "Rodrigo Ismael ", "apellido": "rrr", "edad": 18 }
+  ]
+}

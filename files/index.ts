@@ -1,4 +1,4 @@
-import { readFileSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 import { writeFile, readFile } from "fs/promises";
 import { Obj, ObjWithId } from "./model/model";
 
