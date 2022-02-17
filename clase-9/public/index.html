@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clase-9</title>
+  </head>
+  <body>
+    <span></span>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.7/handlebars.min.js"></script>
+    <script>
+      const templateString = `<h1>Datos</h1>
+    <ul>
+      <li>{{name}}</li>
+      <li>{{lastName}}</li>
+    </ul
+    `;
+      const template = Handlebars.compile(templateString);
+      const data = {
+        name: "isma",
+        lastName: "morel",
+      };
+      const html = template(data);
+      document.querySelector("span").innerHTML = html;
+    </script>
+  </body>
+</html>
